@@ -11,6 +11,8 @@ $app = new Ivory\Application();
 $app->setHost('0.0.0.0')->setPort(8000);
 
 $app->start();
+
+// Ivory http server listening on http://0.0.0.0:8000
 ```
 
 ## Routing:
