@@ -54,7 +54,10 @@ class HomeController {
 
 ## Global middlewares
 ```php
+// before the request is handled
 $app->addPreGlobalMiddleware(CheckIPMiddleware::class);
+
+// after the request is handled
 $app->addPostGlobalMiddleware(LogRequestMiddleware::class);
 ```
 
