@@ -1,4 +1,3 @@
-# ivory
 <p align="center">
 <img height="auto" style="width: 420px; object-fit: contain;" src="https://github.com/dannyYassine/ivory/blob/main/logo-large.png?raw=true" alt="logo.png">
 </p>
@@ -18,7 +17,7 @@ $app->get('/', HomeController::class);
 $app->start();
 ```
 
-Bind services/controllers to the D.I. container:
+## Bind services/controllers to the D.I. container:
 ```php
 $app->bind(GenerateNameService::class, function () {
     return new GenerateNameService();
@@ -29,7 +28,7 @@ $app->bind(HomeController::class, function (Container $c) {
 });
 ```
 
-Dependencies will be injected to the constructor:
+## Dependencies will be injected to the constructor:
 ```php
 class HomeController {
     public function __construct(protected GenerateNameService $generateNameService) {
@@ -42,7 +41,7 @@ class HomeController {
 }
 ```
 
-Use case driven controllers:
+## Use case driven controllers:
 ```php
 class HomeController {
     public function execute(Request $request): string {
