@@ -25,7 +25,7 @@ $app->delete('/delete', DeleteController::class);
 ```php
 class HomeController {
     public function execute(Request $request): string {
-        return true;
+        return 'This is my response';
     }
 }
 ```
@@ -63,6 +63,6 @@ $app->addPostGlobalMiddleware(LogRequestMiddleware::class);
 
 ## Controller middlewares
 ```php
-// third arugment in router definition
+// third argument in router definition
 $app->get('/name', NameController::class, [NameMiddleware::class]);
 ```
