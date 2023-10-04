@@ -1,8 +1,9 @@
 # ivory
-Powered by Open Swoole: high performant http micro PHP library
-
 <p align="center">
 <img height="auto" style="width: 420px; object-fit: contain;" src="https://github.com/dannyYassine/ivory/blob/main/logo-large.png?raw=true" alt="logo.png">
+</p>
+<p align="center">
+Powered by Open Swoole: high performant http micro PHP library
 </p>
 
 ```php
