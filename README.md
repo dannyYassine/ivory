@@ -13,6 +13,23 @@ $app->setHost('0.0.0.0')->setPort(8000);
 $app->start();
 ```
 
+## Routing:
+```php
+$app->get('/', HomeController::class);
+$app->post('/name', SaveController::class);
+$app->put('/name', UpdateController::class);
+$app->delete('/delete', DeleteController::class);
+```
+
+## Use case driven controllers:
+```php
+class HomeController {
+    public function execute(Request $request): string {
+        return true;
+    }
+}
+```
+
 ## Bind services/controllers to the D.I. container:
 ```php
 $app->bind(Service::class, function () {
@@ -35,11 +52,14 @@ class HomeController {
 }
 ```
 
-## Use case driven controllers:
+## Global middlewares
 ```php
-class HomeController {
-    public function execute(Request $request): string {
-        return true;
-    }
-}
+$app->addPreGlobalMiddleware(CheckIPMiddleware::class);
+$app->addPostGlobalMiddleware(LogRequestMiddleware::class);
+```
+
+## Controller middlewares
+```php
+// third arugment in router definition
+$app->get('/name', NameController::class, [NameMiddleware::class]);
 ```
