@@ -12,8 +12,6 @@ $app = new Application();
 
 $app->setHost('0.0.0.0')->setPort(8000);
 
-$app->get('/', HomeController::class);
-
 $app->start();
 ```
 
