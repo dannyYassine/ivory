@@ -1,0 +1,66 @@
+version: '3'
+
+networks:
+  ivory:
+    driver: bridge
+
+services:
+  postgres:
+    container_name: ivory-postgres
+    image: postgres:14.1-alpine
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: postgres
+    ports:
+      - '5432:5432'
+    restart: unless-stopped
+    tty: true
+    networks:
+      - ivory
+
+  redis:
+    container_name: ivory-redis
+    image: redis:7.0
+    restart: always
+    ports:
+      - '6379:6379'
+    networks:
+      - ivory
+
+  api:
+    container_name: ivory-api
+    build:
+      context: .
+      dockerfile: dev-env/php.dockerfile
+    command: >
+      sh -c "if [ ! -f ".env" ]; then cp .env.example .env ; fi &&
+        tail -f /dev/null"
+    ports:
+      - "8000:8000"
+    volumes:
+      - .:/usr/src/ivory
+      - ./xdebug.ini:/usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini
+    networks:
+      - ivory
+    depends_on:
+      - postgres
+    links:
+      - postgres
+
+  worker:
+    container_name: ivory-worker
+    build:
+      context: .
+      dockerfile: dev-env/php.worker.dockerfile
+    command: >
+      sh -c "if [ ! -f ".env" ]; then cp .env.example .env ; fi && tail -f /dev/null"
+    volumes:
+      - ./api:/usr/src/api
+    networks:
+      - ivory
+    depends_on:
+      - api
+      - postgres
+    links:
+      - postgres
