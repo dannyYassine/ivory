@@ -6,9 +6,7 @@ Powered by <a href="https://openswoole.com/" target="_blank">Open Swoole</a>: hi
 </p>
 
 ```php
-use Ivory\Application;
-
-$app = new Application();
+$app = new Ivory\Application();
 
 $app->setHost('0.0.0.0')->setPort(8000);
 
