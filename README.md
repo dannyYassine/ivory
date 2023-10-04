@@ -2,7 +2,7 @@
 <img height="auto" style="width: 420px; object-fit: contain;" src="https://github.com/dannyYassine/ivory/blob/main/logo-large.png?raw=true" alt="logo.png">
 </p>
 <p align="center">
-Powered by Open Swoole: high performant http micro PHP library
+Powered by <a href="https://openswoole.com/" target="_blank">Open Swoole</a>: high performant http micro PHP library
 </p>
 
 ```php
