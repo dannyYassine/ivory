@@ -2,20 +2,31 @@
 
 use DI\Container;
 use Ivory\Application;
-use Swoole\Controllers\DeleteController;
-use Swoole\Controllers\HomeController;
-use Swoole\Controllers\NameController;
-use Swoole\Controllers\SaveController;
-use Swoole\Services\GenerateNameService;
+use Dev\Controllers\DeleteController;
+use Dev\Controllers\HomeController;
+use Dev\Controllers\NameController;
+use Dev\Controllers\SaveController;
+use Dev\Middlewares\CheckIPMiddleware;
+use Dev\Middlewares\LogRequestMiddleware;
+use Dev\Middlewares\NameMiddleware;
+use Dev\Services\GenerateNameService;
+use Dev\Services\ValidateIPService;
 
-require __DIR__ . '/vendor/autoload.php';
+require 'vendor/autoload.php';
 
 $app = new Application();
 
 $app->setHost('0.0.0.0')->setPort(8000);
 
+$app->addPreGlobalMiddleware(CheckIPMiddleware::class);
+$app->addPostGlobalMiddleware(LogRequestMiddleware::class);
+
 $app->bind(GenerateNameService::class, function () {
     return new GenerateNameService();
+});
+
+$app->bind(ValidateIPService::class, function () {
+    return new ValidateIPService();
 });
 
 $app->bind(HomeController::class, function (Container $c) {
@@ -23,7 +34,7 @@ $app->bind(HomeController::class, function (Container $c) {
 });
 
 $app->get('/', HomeController::class);
-$app->get('/name', NameController::class);
+$app->get('/name', NameController::class, [NameMiddleware::class]);
 $app->post('/name', SaveController::class);
 $app->delete('/delete', DeleteController::class);
 

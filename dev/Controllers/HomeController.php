@@ -1,9 +1,9 @@
 <?php
 
-namespace Swoole\Controllers;
+namespace Dev\Controllers;
 
 use OpenSwoole\Http\Request;
-use Swoole\Services\GenerateNameService;
+use Dev\Services\GenerateNameService;
 
 class HomeController {
     public function __construct(protected GenerateNameService $generateNameService) {

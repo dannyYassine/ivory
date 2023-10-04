@@ -1,6 +1,6 @@
 <?php
 
-namespace Swoole\Controllers;
+namespace Dev\Controllers;
 
 use OpenSwoole\Http\Request;
 

@@ -19,15 +19,6 @@ services:
     networks:
       - ivory
 
-  redis:
-    container_name: ivory-redis
-    image: redis:7.0
-    restart: always
-    ports:
-      - '6379:6379'
-    networks:
-      - ivory
-
   api:
     container_name: ivory-api
     build:
@@ -47,20 +38,19 @@ services:
       - postgres
     links:
       - postgres
-
-  worker:
-    container_name: ivory-worker
-    build:
-      context: .
-      dockerfile: dev-env/php.worker.dockerfile
-    command: >
-      sh -c "if [ ! -f ".env" ]; then cp .env.example .env ; fi && tail -f /dev/null"
-    volumes:
-      - ./api:/usr/src/api
-    networks:
-      - ivory
-    depends_on:
-      - api
-      - postgres
-    links:
-      - postgres
+  # worker:
+  #   container_name: ivory-worker
+  #   build:
+  #     context: .
+  #     dockerfile: dev-env/php.worker.dockerfile
+  #   command: >
+  #     sh -c "if [ ! -f ".env" ]; then cp .env.example .env ; fi && tail -f /dev/null"
+  #   volumes:
+  #     - ./api:/usr/src/api
+  #   networks:
+  #     - ivory
+  #   depends_on:
+  #     - api
+  #     - postgres
+  #   links:
+  #     - postgres

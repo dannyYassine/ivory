@@ -1,9 +1,12 @@
 {
   "private": true,
   "scripts": {
-    "serve": "cd dev ; PORT=8000 yarn serve"
+    "dev": "kill -9 $(lsof -t -i:$PORT) ; php server.php",
+    "serve": "nodemon --watch ./ --watch ./.. -e php --exec yarn dev --ignore vendor/"
   },
-  "devDependencies": {},
+  "devDependencies": {
+    "nodemon": "^3.0.1"
+  },
   "name": "api",
   "description": "<p align=\"center\"><a href=\"https://laravel.com\" target=\"_blank\"><img src=\"https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg\" width=\"400\"></a></p>",
   "version": "1.0.0",

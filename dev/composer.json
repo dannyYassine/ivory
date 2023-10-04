@@ -1,5 +1,5 @@
 {
-    "name": "dannyyassine/ivory",
+    "name": "dannyyassine/dev",
     "type": "libary",
     "description": "High performant micro http PHP library",
     "keywords": [
@@ -9,23 +9,22 @@
     "license": "MIT",
     "require": {
         "php": "^8.0",
-        "openswoole/core": "^22.1",
-        "php-di/php-di": "^7.0"
+        "dannyyassine/ivory": "*"
     },
-    "require-dev": {
-        "fakerphp/faker": "^1.9.1",
-        "mockery/mockery": "^1.4.2",
-        "phpunit/phpunit": "^9.3.3"
-    },
+    "require-dev": {},
+    "repositories": [
+        {
+            "type": "path",
+            "url": ".."
+        }
+    ],
     "autoload": {
         "psr-4": {
-            "Ivory\\": "./../src/"
+            "Dev\\": "."
         }
     },
     "autoload-dev": {
-        "psr-4": {
-            "Tests\\": "tests/"
-        }
+        "psr-4": {}
     },
     "scripts": {
         "post-root-package-install": [

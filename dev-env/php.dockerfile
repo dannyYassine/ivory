@@ -2,7 +2,7 @@ FROM composer:latest as composer
 FROM node:14
 FROM php:8-fpm
 
-WORKDIR /usr/src/api
+WORKDIR /usr/src/ivory
 
 # install node and npm
 COPY --from=node /usr/local/lib/node_modules /usr/local/lib/node_modules
@@ -31,7 +31,7 @@ RUN docker-php-ext-enable xdebug
 # install yarn
 RUN npm install -g yarn
 
-COPY ./api .
+COPY . .
 
 # install dependencies
-RUN composer install --no-dev --no-cache --ignore-platform-reqs
+# RUN composer install --no-dev --no-cache --ignore-platform-reqs

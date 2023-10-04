@@ -5,6 +5,7 @@ namespace Ivory;
 use OpenSwoole\Http\Server;
 use OpenSwoole\Http\Request;
 use OpenSwoole\Http\Response;
+use DI\Container;
 use Ivory\Router;
 use Throwable;
 
@@ -16,9 +17,9 @@ class Application {
 
     protected array $diAttributes = [];
 
-    private ?\OpenSwoole\HTTP\Server $server = null;
+    private ?Server $server = null;
 
-    private ?\DI\Container $di = null;
+    private ?Container $di = null;
 
     private Router $router;
 
@@ -50,6 +51,19 @@ class Application {
         return $this;
     }
 
+    public function addPreGlobalMiddleware(string $globalMiddleware): self
+    {
+        $this->router->addPreGlobalMiddleware($globalMiddleware);
+
+        return $this;
+    }
+    public function addPostGlobalMiddleware(string $globalMiddleware): self
+    {
+        $this->router->addPostGlobalMiddleware($globalMiddleware);
+
+        return $this;
+    }
+
     public function bind(string $class, callable $callable): self
     {
         $this->diAttributes[$class] = $callable;
@@ -57,38 +71,40 @@ class Application {
         return $this;
     }
 
-    public function get(string $path, string $controller): self {
-        $this->router->get(path: $path, controller: $controller);
+    public function get(string $path, string $controller, array $middlewares = []): self {
+        $this->router->get(path: $path, controller: $controller, middlewares: $middlewares);
 
         return $this;
     }
 
-    public function post(string $path, string $controller): self {
-        $this->router->post(path: $path, controller: $controller);
+    public function post(string $path, string $controller, array $middlewares = []): self {
+        $this->router->post(path: $path, controller: $controller, middlewares: $middlewares);
 
         return $this;
     }
 
-    public function put(string $path, string $controller): self {
-        $this->router->put(path: $path, controller: $controller);
+    public function put(string $path, string $controller, array $middlewares = []): self {
+        $this->router->put(path: $path, controller: $controller, middlewares: $middlewares);
 
         return $this;
     }
 
-    public function patch(string $path, string $controller): self {
-        $this->router->patch(path: $path, controller: $controller);
+    public function patch(string $path, string $controller, array $middlewares = []): self {
+        $this->router->patch(path: $path, controller: $controller, middlewares: $middlewares);
 
         return $this;
     }
 
-    public function delete(string $path, string $controller): self {
-        $this->router->delete(path: $path, controller: $controller);
+    public function delete(string $path, string $controller, array $middlewares = []): self {
+        $this->router->delete(path: $path, controller: $controller, middlewares: $middlewares);
 
         return $this;
     }
 
     protected function bootstrap(): void
     {
+        $this->di = new \DI\Container($this->diAttributes);
+
         $this->server = new \OpenSwoole\HTTP\Server($this->host, $this->port);
 
         $this->server->set([
@@ -104,17 +120,15 @@ class Application {
             echo "Ivory http server started at: http://$host:$port\n";
         });
 
-        $this->di = new \DI\Container($this->diAttributes);
-
         $this->server->on("Request", function(Request $request, Response $response)
         {
             $response->header("Content-Type", "application/json");
         
             try {
-                $result = $this->router->handle($request, $this->di);
+                $result = $this->router->handle($request, $response, $this->di);
                 $response->end(json_encode(['data' => $result]));
             } catch (Throwable $e) {
-                $response->end(json_encode(['request' => $request, 'error' => $e->getMessage(), 'trace' => $e->getTrace()]));
+                $response->end(json_encode(['error' => $e->getMessage(), 'request' => $request, 'trace' => $e->getTrace()]));
             }
         });
     }

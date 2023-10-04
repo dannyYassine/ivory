@@ -20,7 +20,10 @@
     "autoload": {
         "psr-4": {
             "Ivory\\": "src/"
-        }
+        },
+        "exclude-from-classmap": [
+            "dev/"
+        ]
     },
     "autoload-dev": {
         "psr-4": {

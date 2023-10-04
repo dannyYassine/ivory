@@ -1,6 +1,6 @@
 <?php
 
-namespace Swoole\Services;
+namespace Dev\Services;
 
 use OpenSwoole\Http\Request;
 use Swoole\Controllers\HomeController;
