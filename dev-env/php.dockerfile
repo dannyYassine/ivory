@@ -16,6 +16,7 @@ COPY --from=composer /usr/bin/composer /usr/bin/composer
 RUN apt-get update
 RUN apt-get install -y libpq-dev
 RUN apt-get install -y git
+RUN apt-get install -y lsof
 
 # install php extensions and libs
 RUN docker-php-ext-install pcntl

@@ -1,6 +1,10 @@
 # ivory
 Powered by Open Swoole: high performant http micro PHP library
 
+<p align="center">
+<img height="auto" style="width: 420px; object-fit: contain;" src="https://github.com/dannyYassine/ivory/blob/main/logo-large.png?raw=true" alt="logo.png">
+</p>
+
 ```php
 use Ivory\Application;
 
@@ -22,4 +26,26 @@ $app->bind(GenerateNameService::class, function () {
 $app->bind(HomeController::class, function (Container $c) {
     return new HomeController(generateNameService: $c->get(GenerateNameService::class));
 });
+```
+
+Dependencies will be injected to the constructor:
+```php
+class HomeController {
+    public function __construct(protected GenerateNameService $generateNameService) {
+        //
+    }
+
+    public function execute(Request $request): string {
+        return $this->generateNameService->createName();
+    }
+}
+```
+
+Use case driven controllers:
+```php
+class HomeController {
+    public function execute(Request $request): string {
+        return true;
+    }
+}
 ```
