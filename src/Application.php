@@ -1,16 +1,18 @@
-<?php
+<?php declare(strict_types=1);
 
-namespace Swoole;
+namespace Ivory;
 
 use OpenSwoole\Http\Server;
 use OpenSwoole\Http\Request;
 use OpenSwoole\Http\Response;
-use Swoole\Router;
+use Ivory\Router;
 use Throwable;
 
 class Application {
     protected ?string $host = null;
     protected ?int $port = null;
+    protected int $workerNumbers = 4;
+    protected int $backlog = 128;
 
     protected array $diAttributes = [];
 
@@ -32,6 +34,18 @@ class Application {
 
     public function setPort(int $value): self {
         $this->port = $value;
+
+        return $this;
+    }
+
+    public function setWorkerNumbers(int $value): self {
+        $this->workerNumbers = $value;
+
+        return $this;
+    }
+
+    public function setBacklog(int $value): self {
+        $this->backlog = $value;
 
         return $this;
     }
@@ -61,19 +75,25 @@ class Application {
         return $this;
     }
 
+    public function patch(string $path, string $controller): self {
+        $this->router->patch(path: $path, controller: $controller);
+
+        return $this;
+    }
+
     public function delete(string $path, string $controller): self {
         $this->router->delete(path: $path, controller: $controller);
 
         return $this;
     }
 
-    protected function preStart(): void
+    protected function bootstrap(): void
     {
         $this->server = new \OpenSwoole\HTTP\Server($this->host, $this->port);
 
         $this->server->set([
-            "worker_num" => 4,
-            "backlog" => 128
+            "worker_num" => $this->workerNumbers,
+            "backlog" => $this->backlog
         ]);
         
         $this->server->on("Start", function(Server $server)
@@ -100,7 +120,7 @@ class Application {
     }
 
     public function start(): void {
-        $this->preStart();
+        $this->bootstrap();
         $this->server->start();
     }
 }

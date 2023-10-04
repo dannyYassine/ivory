@@ -1,7 +1,7 @@
 <?php
 
 use DI\Container;
-use Swoole\Application;
+use Ivory\Application;
 use Swoole\Controllers\DeleteController;
 use Swoole\Controllers\HomeController;
 use Swoole\Controllers\NameController;

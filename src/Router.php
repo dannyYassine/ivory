@@ -1,6 +1,6 @@
-<?php
+<?php declare(strict_types=1);
 
-namespace Swoole;
+namespace Ivory;
 
 use OpenSwoole\Http\Request;
 use DI\Container;
@@ -9,7 +9,10 @@ class Router {
 
     protected array $map = [
         'GET' => [],
-        'POST' => []
+        'POST' => [],
+        'PUT' => [],
+        'DELETE' => [],
+        'PATCH' => []
     ];
 
     public function get(string $path, string $controller): self
@@ -29,6 +32,13 @@ class Router {
     public function put(string $path, string $controller): self
     {
         $this->map['PUT'][$path] = [$controller];
+
+        return $this;
+    }
+
+    public function patch(string $path, string $controller): self
+    {
+        $this->map['PATCH'][$path] = [$controller];
 
         return $this;
     }
