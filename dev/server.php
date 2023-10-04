@@ -3,6 +3,7 @@
 use DI\Container;
 use Ivory\Application;
 use Dev\Controllers\DeleteController;
+use Dev\Controllers\GetWeatherController;
 use Dev\Controllers\HomeController;
 use Dev\Controllers\NameController;
 use Dev\Controllers\SaveController;
@@ -34,6 +35,7 @@ $app->bind(HomeController::class, function (Container $c) {
 });
 
 $app->get('/', HomeController::class);
+$app->get('/weather', GetWeatherController::class);
 $app->get('/name', NameController::class, [NameMiddleware::class]);
 $app->post('/name', SaveController::class);
 $app->delete('/delete', DeleteController::class);

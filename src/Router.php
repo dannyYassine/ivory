@@ -16,11 +16,14 @@ class Router {
         'PATCH' => []
     ];
 
-    protected array $preGlobalMiddlewares = [];
-    protected array $postGlobalMiddlewares = [];
+    protected ?array $preGlobalMiddlewares = null;
+    protected ?array $postGlobalMiddlewares = null;
 
     public function addPreGlobalMiddleware(string $globalMiddleware): self
     {
+        if (!$this->preGlobalMiddlewares) {
+            $this->preGlobalMiddlewares = [];
+        }
         $this->preGlobalMiddlewares[] = $globalMiddleware;
 
         return $this;
@@ -28,40 +31,43 @@ class Router {
 
     public function addPostGlobalMiddleware(string $globalMiddleware): self
     {
+        if (!$this->preGlobalMiddlewares) {
+            $this->postGlobalMiddlewares = [];
+        }
         $this->postGlobalMiddlewares[] = $globalMiddleware;
 
         return $this;
     }
 
-    public function get(string $path, string $controller, array $middlewares = []): self
+    public function get(string $path, string $controller, ?array $middlewares = null): self
     {
         $this->map['GET'][$path] = [$controller, $middlewares];
 
         return $this;
     }
 
-    public function post(string $path, string $controller, array $middlewares = []): self
+    public function post(string $path, string $controller, ?array $middlewares = null): self
     {
         $this->map['POST'][$path] = [$controller, $middlewares];
 
         return $this;
     }
     
-    public function put(string $path, string $controller, array $middlewares = []): self
+    public function put(string $path, string $controller, ?array $middlewares = null): self
     {
         $this->map['PUT'][$path] = [$controller, $middlewares];
 
         return $this;
     }
 
-    public function patch(string $path, string $controller, array $middlewares = []): self
+    public function patch(string $path, string $controller, ?array $middlewares = null): self
     {
         $this->map['PATCH'][$path] = [$controller, $middlewares];
 
         return $this;
     }
 
-    public function delete(string $path, string $controller, array $middlewares = []): self
+    public function delete(string $path, string $controller, ?array $middlewares = null): self
     {
         $this->map['DELETE'][$path] = [$controller, $middlewares];
 
@@ -69,12 +75,14 @@ class Router {
     }
 
     function handle(Request $request, Response $response, Container $di) {
-        foreach ($this->preGlobalMiddlewares as $globalMiddlewareClass) {
-            $globalMiddleware = $di->get($globalMiddlewareClass);
-            $next = fn () => true;
-            $continue = $globalMiddleware->execute($request, $next);
-            if (!$continue) {
-                return;
+        if ($this->preGlobalMiddlewares) {
+            foreach ($this->preGlobalMiddlewares as $globalMiddlewareClass) {
+                $globalMiddleware = $di->get($globalMiddlewareClass);
+                $next = fn () => true;
+                $continue = $globalMiddleware->execute($request, $next);
+                if (!$continue) {
+                    return;
+                }
             }
         }
 
@@ -82,30 +90,33 @@ class Router {
         $method = $request->server['request_method'];
 
         $args = $this->map[$method][$uri];
-        $controllerClass = $args[0];
-        $middlewares = $args[1];
         
-        foreach ($middlewares as $middlewareClass) {
-            $middleware = $di->get($middlewareClass);
-            $next = fn () => true;
-            $continue = $middleware->execute($request, $next);
-            if (!$continue) {
-                return;
+        if ($middlewares = $args[1]) {
+            foreach ($middlewares as $middlewareClass) {
+                $middleware = $di->get($middlewareClass);
+                $next = fn () => true;
+                $continue = $middleware->execute($request, $next);
+                if (!$continue) {
+                    return;
+                }
             }
         }
 
+        $controllerClass = $args[0];
         $controller = $di->get($controllerClass);
     
         $result = $controller->execute($request);
 
-        foreach ($this->postGlobalMiddlewares as $globalMiddlewareClass) {
-            $globalMiddleware = $di->get($globalMiddlewareClass);
-            $next = fn ($result) => $result;
-            $continue = $globalMiddleware->execute($result, $request, $response, $next);
-            if (!$continue) {
-                return;
+        if ($this->preGlobalMiddlewares) {
+            foreach ($this->postGlobalMiddlewares as $globalMiddlewareClass) {
+                $globalMiddleware = $di->get($globalMiddlewareClass);
+                $next = fn ($result) => $result;
+                $continue = $globalMiddleware->execute($result, $request, $response, $next);
+                if (!$continue) {
+                    return;
+                }
+                $result = $continue;
             }
-            $result = $continue;
         }
 
         return $result;

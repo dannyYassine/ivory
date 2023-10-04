@@ -71,31 +71,31 @@ class Application {
         return $this;
     }
 
-    public function get(string $path, string $controller, array $middlewares = []): self {
+    public function get(string $path, string $controller, ?array $middlewares = null): self {
         $this->router->get(path: $path, controller: $controller, middlewares: $middlewares);
 
         return $this;
     }
 
-    public function post(string $path, string $controller, array $middlewares = []): self {
+    public function post(string $path, string $controller, ?array $middlewares = null): self {
         $this->router->post(path: $path, controller: $controller, middlewares: $middlewares);
 
         return $this;
     }
 
-    public function put(string $path, string $controller, array $middlewares = []): self {
+    public function put(string $path, string $controller, ?array $middlewares = null): self {
         $this->router->put(path: $path, controller: $controller, middlewares: $middlewares);
 
         return $this;
     }
 
-    public function patch(string $path, string $controller, array $middlewares = []): self {
+    public function patch(string $path, string $controller, ?array $middlewares = null): self {
         $this->router->patch(path: $path, controller: $controller, middlewares: $middlewares);
 
         return $this;
     }
 
-    public function delete(string $path, string $controller, array $middlewares = []): self {
+    public function delete(string $path, string $controller, ?array $middlewares = null): self {
         $this->router->delete(path: $path, controller: $controller, middlewares: $middlewares);
 
         return $this;
