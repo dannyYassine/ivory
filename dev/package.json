@@ -2,7 +2,8 @@
   "private": true,
   "scripts": {
     "dev": "kill -9 $(lsof -t -i:$PORT) ; php server.php",
-    "serve": "nodemon --watch ./ --watch ./.. -e php --exec yarn dev --ignore vendor/"
+    "serve": "nodemon --watch ./ --watch ./.. -e php --exec yarn dev --ignore vendor/",
+    "deploy-serve": "php server.php"
   },
   "devDependencies": {
     "nodemon": "^3.0.1"

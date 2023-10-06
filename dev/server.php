@@ -18,7 +18,7 @@ require 'vendor/autoload.php';
 
 $app = new Application();
 
-$app->setHost('0.0.0.0')->setPort(8000);
+$app->setHost('0.0.0.0')->setPort($_ENV['PORT'] ?? 8000);
 
 $app->addPreGlobalMiddleware(CheckIPMiddleware::class);
 $app->addPostGlobalMiddleware(LogRequestMiddleware::class);
