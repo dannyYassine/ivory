@@ -20,40 +20,41 @@ $app->start();
 $app->get('/', HomeController::class);
 
 $app->group('/api', function (Router $router) {
+  $router->get('/name', GetController::class);
   $router->post('/name', SaveController::class);
   $router->put('/name', UpdateController::class);
-  $router->delete('/delete', DeleteController::class);
+  $router->delete('/name', DeleteController::class);
 });
 ```
 
 ## Use case driven controllers:
 ```php
 class HomeController {
-    public function execute(Request $request): string {
-        return 'This is my response';
-    }
+  public function execute(Request $request): string {
+    return 'This is my response';
+  }
 }
 ```
 
 ## Bind services/controllers to the D.I. container:
 ```php
 $app->bind(Service::class, function () {
-    return new Service();
+  return new Service();
 });
 
 $app->bind(HomeController::class, function (Container $c) {
-    return new HomeController(
-        service: $c->get(GenerateNameService::class)
-    );
+  return new HomeController(
+    service: $c->get(GenerateNameService::class)
+  );
 });
 ```
 
 ## Dependencies will be injected to the constructor:
 ```php
 class HomeController {
-    public function __construct(protected Service $service) {
-        //
-    }
+  public function __construct(protected Service $service) {
+    //
+  }
 }
 ```
 
