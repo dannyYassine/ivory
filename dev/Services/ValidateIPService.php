@@ -5,6 +5,6 @@ namespace Dev\Services;
 class ValidateIPService {
     public function validate(string $ip): string
     {
-        return in_array($ip, ['173.177.93.35']);
+        return in_array($ip, ['173.177.93.35', '99.240.221.86']);
     }
 }

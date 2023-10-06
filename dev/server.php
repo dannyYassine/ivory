@@ -12,6 +12,7 @@ use Dev\Middlewares\LogRequestMiddleware;
 use Dev\Middlewares\NameMiddleware;
 use Dev\Services\GenerateNameService;
 use Dev\Services\ValidateIPService;
+use Ivory\Router;
 
 require 'vendor/autoload.php';
 
@@ -34,10 +35,16 @@ $app->bind(HomeController::class, function (Container $c) {
     return new HomeController(generateNameService: $c->get(GenerateNameService::class));
 });
 
-$app->get('/', HomeController::class);
-$app->get('/weather', GetWeatherController::class);
-$app->get('/name', NameController::class, [NameMiddleware::class]);
-$app->post('/name', SaveController::class);
-$app->delete('/delete', DeleteController::class);
+$app->group('/api', function (Router $router) {
+    $router->get('/', HomeController::class);
+    $router->get('/name', NameController::class, [NameMiddleware::class]);
+    $router->post('/name', SaveController::class);
+    $router->delete('/delete', DeleteController::class);
+
+    $router->group('/weather',function ($router) {
+        $router->get('/', GetWeatherController::class);
+        $router->get('/city', GetWeatherController::class);
+    });
+});
 
 $app->start();

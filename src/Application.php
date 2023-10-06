@@ -101,6 +101,18 @@ class Application {
         return $this;
     }
 
+    public function addRouter(Router $router): self {
+        $this->router->addRouter($router);
+
+        return $this;
+    }
+
+    public function group(string $path, callable $callable): self {
+        $this->router->group($path, $callable);
+
+        return $this;
+    }
+
     protected function bootstrap(): void
     {
         $this->di = new \DI\Container($this->diAttributes);
@@ -123,12 +135,14 @@ class Application {
         $this->server->on("Request", function(Request $request, Response $response)
         {
             $response->header("Content-Type", "application/json");
-        
+            
             try {
                 $result = $this->router->handle($request, $response, $this->di);
-                $response->end(json_encode(['data' => $result]));
+                $response->end(json_encode(['status' => 200, 'data' => $result]));
+            } catch (IvoryRouteNotFoundException $e) {
+                $response->end(json_encode(['status' => 404, 'error' => $e->getMessage(), 'request' => $request, 'trace' => $e->getTrace()]));
             } catch (Throwable $e) {
-                $response->end(json_encode(['error' => $e->getMessage(), 'request' => $request, 'trace' => $e->getTrace()]));
+                $response->end(json_encode(['status' => 500, 'error' => $e->getMessage(), 'request' => $request, 'trace' => $e->getTrace()]));
             }
         });
     }
