@@ -18,9 +18,12 @@ $app->start();
 ## Routing:
 ```php
 $app->get('/', HomeController::class);
-$app->post('/name', SaveController::class);
-$app->put('/name', UpdateController::class);
-$app->delete('/delete', DeleteController::class);
+
+$app->group('/api', function (Router $router) {
+  $router->post('/name', SaveController::class);
+  $router->put('/name', UpdateController::class);
+  $router->delete('/delete', DeleteController::class);
+});
 ```
 
 ## Use case driven controllers:
