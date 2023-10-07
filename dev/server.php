@@ -5,6 +5,7 @@ use Ivory\Application;
 use Dev\Controllers\DeleteController;
 use Dev\Controllers\GetWeatherController;
 use Dev\Controllers\HomeController;
+use Dev\Controllers\ApiHealthController;
 use Dev\Controllers\NameController;
 use Dev\Controllers\SaveController;
 use Dev\Middlewares\CheckIPMiddleware;
@@ -38,6 +39,8 @@ $app->bind(HomeController::class, function (Container $c) {
 $app->get('/', HomeController::class);
 
 $app->group('/api', function (Router $router) {
+    $app->get('/health', ApiHealthController::class);
+
     $router->get('/name', NameController::class, [NameMiddleware::class]);
     $router->post('/name', SaveController::class);
     $router->delete('/delete', DeleteController::class);
