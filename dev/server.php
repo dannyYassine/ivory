@@ -35,8 +35,9 @@ $app->bind(HomeController::class, function (Container $c) {
     return new HomeController(generateNameService: $c->get(GenerateNameService::class));
 });
 
+$app->get('/', HomeController::class);
+
 $app->group('/api', function (Router $router) {
-    $router->get('/', HomeController::class);
     $router->get('/name', NameController::class, [NameMiddleware::class]);
     $router->post('/name', SaveController::class);
     $router->delete('/delete', DeleteController::class);

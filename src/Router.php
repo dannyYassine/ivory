@@ -19,7 +19,7 @@ class Router {
     protected ?array $preGlobalMiddlewares = null;
     protected ?array $postGlobalMiddlewares = null;
 
-    function __construct(protected ?string $root = null) {
+    function __construct(protected string $root = '/') {
 
     }
 
@@ -95,15 +95,18 @@ class Router {
 
     protected function withRoot(string $path): string
     {
-        if ($path === '/') {
+        if ($path === '/' && $this->root === '/') {
             $path = '';
         }
-        
-        if ($this->root) {
-            return $this->root . $path;
+        if (str_starts_with($path, '/') && $this->root === '/') {
+            return $path;
+        }
+
+        if (str_starts_with($this->root, '/') && $path === '/') {
+            return $this->root;
         }
         
-        return $path;
+        return $this->root . $path;
     }
 
     public function addRouter(Router $router): self {
