@@ -39,7 +39,7 @@ $app->bind(HomeController::class, function (Container $c) {
 $app->get('/', HomeController::class);
 
 $app->group('/api', function (Router $router) {
-    $app->get('/health', ApiHealthController::class);
+    $router->get('/health', ApiHealthController::class);
 
     $router->get('/name', NameController::class, [NameMiddleware::class]);
     $router->post('/name', SaveController::class);
