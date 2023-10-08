@@ -3,8 +3,8 @@
 namespace Dev\Middlewares;
 
 use Dev\Services\ValidateIPService;
+use Ivory\ForbiddenException;
 use OpenSwoole\Http\Request;
-use UnexpectedValueException;
 
 class CheckIPMiddleware {
     function __construct(protected ValidateIPService $validateIPService) {
@@ -13,7 +13,7 @@ class CheckIPMiddleware {
 
     public function execute(Request $request, callable $next) {
         if (!$this->validateIPService->validate($request->server['remote_addr'])) {
-            throw new UnexpectedValueException('Wrong ip');
+            throw new ForbiddenException('Wrong ip');
         }
 
         return $next();

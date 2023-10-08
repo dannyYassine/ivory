@@ -10,7 +10,8 @@
     "require": {
         "php": "^8.0",
         "dannyyassine/ivory": "*",
-        "illuminate/database": "*"
+        "illuminate/database": "*",
+        "illuminate/queue": "^10.26"
     },
     "repositories": [
         {
@@ -38,5 +39,8 @@
         "sort-packages": true
     },
     "minimum-stability": "dev",
-    "prefer-stable": true
+    "prefer-stable": true,
+    "require-dev": {
+        "openswoole/ide-helper": "~22.0.1"
+    }
 }

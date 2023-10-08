@@ -140,10 +140,10 @@ class Application {
                 $result = $this->router->handle($request, $response, $this->di);
                 $response->end(json_encode(['data' => $result, 'request' => $request, 'response' => $response]));
             } catch (IvoryRouteNotFoundException $e) {
-                $response->setStatusCode(404);
+                $response->status(404);
                 $response->end(json_encode(['error' => $e->getMessage(), 'request' => $request, 'trace' => $e->getTrace()]));
             } catch (Throwable $e) {
-                $response->setStatusCode((int)$e->getCode() ?? 500);
+                $response->status((int)$e->getCode() ?? 500);
                 $response->end(json_encode(['error' => $e->getMessage(), 'request' => $request, 'trace' => $e->getTrace(), 'application' => $this->router]));
             }
         });
