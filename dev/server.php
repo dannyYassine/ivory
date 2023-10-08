@@ -23,7 +23,7 @@ $app = new Application();
 
 $app->setHost('0.0.0.0')->setPort($_ENV['PORT'] ?? 8000);
 
-$app->addPreGlobalMiddleware(CheckIPMiddleware::class);
+//$app->addPreGlobalMiddleware(CheckIPMiddleware::class);
 $app->addPostGlobalMiddleware(LogRequestMiddleware::class);
 
 $app->bind(GenerateNameService::class, function () {
