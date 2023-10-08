@@ -145,7 +145,7 @@ class Router {
         $args = $this->map[$method][$uri];
 
         if (!$args) {
-            throw new IvoryRouteNotFoundException();
+            throw new IvoryRouteNotFoundException('Route not found.');
         }
         
         if ($middlewares = $args[1]) {
@@ -162,7 +162,7 @@ class Router {
         $controllerClass = $args[0];
         $controller = $di->get($controllerClass);
     
-        $result = $controller->execute($request);
+        $result = $controller->execute($request, $response);
 
         if ($this->preGlobalMiddlewares) {
             foreach ($this->postGlobalMiddlewares as $globalMiddlewareClass) {

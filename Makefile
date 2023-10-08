@@ -12,7 +12,7 @@ build-db:
 	docker-compose build ivory-postgres
 build-daemon:
 	docker-compose up -d --build
-dev:
+up:
 	docker-compose up
 dev-daemon:
 	docker-compose up -d
@@ -26,7 +26,7 @@ api-install:
 api-key:
 	docker exec -it ivory-api php artisan key:generate
 api-debug:
-	docker exec -it ivory-api php artisan serve --host 0.0.0.0 --port 8000
+	docker exec -it ivory-api yarn debug
 api-migrate:
 	docker exec -it ivory-api php artisan migrate
 api-migrate-refresh:

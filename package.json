@@ -2,6 +2,7 @@
   "private": true,
   "scripts": {
     "serve": "cd dev ; PORT=8000 yarn serve",
+    "debug": "cd dev ; PORT=8000 yarn debug",
     "deploy-serve": "cd dev ; yarn deploy-serve"
   },
   "devDependencies": {},

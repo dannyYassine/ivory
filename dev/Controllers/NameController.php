@@ -2,10 +2,14 @@
 
 namespace Dev\Controllers;
 
+use Dev\Models\User;
 use OpenSwoole\Http\Request;
 
 class NameController {
     public function execute(Request $request) {
-        return 'Hello world from '.$request->get['name'];
+        $name = $request->get['name'];
+        (new User(['name' => $name]))->save();
+
+        return User::where('name', $name)->first();
     }
 }

@@ -9,13 +9,13 @@
     "license": "MIT",
     "require": {
         "php": "^8.0",
-        "dannyyassine/ivory": "*"
+        "dannyyassine/ivory": "*",
+        "illuminate/database": "*"
     },
-    "require-dev": {},
     "repositories": [
         {
             "type": "path",
-            "url": ".."
+            "url": "../src"
         }
     ],
     "autoload": {
