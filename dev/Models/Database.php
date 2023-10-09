@@ -5,6 +5,8 @@ namespace Dev\Models;
 use Illuminate\Database\Capsule\Manager as Capsule;
  
 class Database {
+    public Capsule $capsule;
+
     public function __construct() 
     {
         $capsule = new Capsule;
@@ -18,6 +20,12 @@ class Database {
              'collation' => 'utf8_unicode_ci',
              'prefix' => '',
         ]);
+        $capsule->setAsGlobal();
         $capsule->bootEloquent();
+        $capsule->getContainer()->singleton('db', function () use ($capsule) {
+            return $capsule;
+        });
+
+        $this->capsule = $capsule;
     }
 }

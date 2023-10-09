@@ -64,6 +64,13 @@ class Application {
         return $this;
     }
 
+    public function singleton(string $class, callable $callable): self
+    {
+        $this->diAttributes[$class] = $callable();
+
+        return $this;
+    }
+
     public function bind(string $class, callable $callable): self
     {
         $this->diAttributes[$class] = $callable;
