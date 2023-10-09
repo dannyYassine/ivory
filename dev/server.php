@@ -2,21 +2,21 @@
 
 use DI\Container;
 use Ivory\Application;
-use Dev\Controllers\DeleteController;
-use Dev\Controllers\GetUsersController;
-use Dev\Controllers\GetWeatherController;
-use Dev\Controllers\HomeController;
-use Dev\Controllers\ApiHealthController;
-use Dev\Controllers\CreateUserInBackgroundController;
-use Dev\Controllers\NameController;
-use Dev\Controllers\SaveController;
-use Dev\Middlewares\CheckIPMiddleware;
-use Dev\Middlewares\LogRequestMiddleware;
-use Dev\Middlewares\NameMiddleware;
-use Dev\Services\GenerateNameService;
-use Dev\Services\ValidateIPService;
-use Dev\Models\Database;
-use Dev\Queues\Queue;
+use App\Controllers\DeleteController;
+use App\Controllers\GetUsersController;
+use App\Controllers\GetWeatherController;
+use App\Controllers\HomeController;
+use App\Controllers\ApiHealthController;
+use App\Controllers\CreateUserInBackgroundController;
+use App\Controllers\NameController;
+use App\Controllers\SaveController;
+use App\Middlewares\CheckIPMiddleware;
+use App\Middlewares\LogRequestMiddleware;
+use App\Middlewares\NameMiddleware;
+use App\Services\GenerateNameService;
+use App\Services\ValidateIPService;
+use App\Models\Database;
+use App\Queues\Queue;
 use Ivory\Router;
 
 require 'vendor/autoload.php';

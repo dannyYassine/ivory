@@ -4,6 +4,7 @@
     "dev": "kill -9 $(lsof -t -i:$PORT) ; php server.php",
     "debug": "php -S 0.0.0.0:$PORT server.php",
     "serve": "nodemon --watch ./ --watch ./.. -e php --exec yarn dev --ignore vendor/",
+    "queue": "php queue.php",
     "deploy-serve": "php server.php"
   },
   "devDependencies": {

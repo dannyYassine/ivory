@@ -3,6 +3,7 @@
   "scripts": {
     "serve": "cd dev ; PORT=8000 yarn serve",
     "debug": "cd dev ; PORT=8000 yarn debug",
+    "queue": "cd dev ; yarn queue",
     "deploy-serve": "cd dev ; yarn deploy-serve"
   },
   "devDependencies": {},

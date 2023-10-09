@@ -34,4 +34,4 @@ COPY . .
 # install dependencies
 RUN cd dev ; composer install --no-dev --no-cache --ignore-platform-reqs ; cd ../
 
-CMD PORT=$PORT yarn deploy-serve
+CMD yarn queue & PORT=$PORT yarn deploy-serve
