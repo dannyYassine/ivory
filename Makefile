@@ -18,6 +18,10 @@ dev-daemon:
 	docker-compose up -d
 down:
 	docker-compose down
+app.worker:
+	sudo make worker-listen
+app.api:
+	sudo make api-serve
 api-setup:
 	make api-install
 api-install:
@@ -38,7 +42,7 @@ api-ssh:
 api-restart:
 	docker-compose restart ivory-api --no-deps
 worker-listen:
-	php artisan queue:listen
+	docker exec -it ivory-api yarn queue
 migrate:
 	docker exec -it ivory-api php artisan migrate
 pre-setup:

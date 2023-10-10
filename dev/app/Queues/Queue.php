@@ -19,7 +19,6 @@ class Queue {
             'queue' => 'default',
         ]);
 
-        // Make this Capsule instance available globally via static methods... (optional)
         $this->queue->setAsGlobal();
     }
 

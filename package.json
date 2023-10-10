@@ -2,8 +2,9 @@
   "private": true,
   "scripts": {
     "serve": "cd dev ; PORT=8000 yarn serve",
+    "queue": "cd dev ; yarn queue:listen",
     "debug": "cd dev ; PORT=8000 yarn debug",
-    "queue": "cd dev ; yarn queue",
+    "deploy-queue": "cd dev ; yarn deploy-queue",
     "deploy-serve": "cd dev ; yarn deploy-serve"
   },
   "devDependencies": {},

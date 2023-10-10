@@ -3,7 +3,8 @@
 namespace App\Models; 
 
 use Illuminate\Database\Capsule\Manager as Capsule;
- 
+use Illuminate\Events\Dispatcher;
+
 class Database {
     public Capsule $capsule;
 
@@ -21,11 +22,16 @@ class Database {
              'prefix' => '',
         ]);
         $capsule->setAsGlobal();
+        $capsule->setEventDispatcher(new Dispatcher());
         $capsule->bootEloquent();
         $capsule->getContainer()->singleton('db', function () use ($capsule) {
             return $capsule;
         });
 
         $this->capsule = $capsule;
+    }
+
+    public function getDatabase(): Capsule {
+        return $this->capsule;
     }
 }

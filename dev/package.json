@@ -5,6 +5,8 @@
     "debug": "php -S 0.0.0.0:$PORT server.php",
     "serve": "nodemon --watch ./ --watch ./.. -e php --exec yarn dev --ignore vendor/",
     "queue": "php queue.php",
+    "queue:listen": "nodemon --watch ./ --watch ./.. -e php --exec yarn run queue --ignore vendor/",
+    "deploy-queue": "php queue.php",
     "deploy-serve": "php server.php"
   },
   "devDependencies": {
