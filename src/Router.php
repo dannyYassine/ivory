@@ -15,7 +15,13 @@ class Router {
         'DELETE' => [],
         'PATCH' => []
     ];
-    protected array $dynamicMap = [];
+    protected array $dynamicMap = [
+        'GET' => [],
+        'POST' => [],
+        'PUT' => [],
+        'DELETE' => [],
+        'PATCH' => []
+    ];
 
     protected ?array $preGlobalMiddlewares = null;
     protected ?array $postGlobalMiddlewares = null;
@@ -234,20 +240,12 @@ class Router {
             $index++;
         }
 
-        if ($dynamicMap) {
-            return $dynamicMap['$'];
-        }
-
-        return null;
+        return $dynamicMap['$'] ?? null;
     }
 
     private function buildTraversalMap(string $method, string $path, string $controller, ?array $middlewares = null): void
     {
         $parts = explode('/', $path);
-        if (!array_key_exists($method, $this->dynamicMap)) {
-            $this->dynamicMap[$method] = [];
-        }
-
         array_shift($parts);
         $this->buildMap($this->dynamicMap[$method], $parts, $controller, $middlewares);
     }
