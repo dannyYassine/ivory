@@ -235,7 +235,7 @@ class Router {
         }
 
         if ($dynamicMap) {
-            return $dynamicMap;
+            return $dynamicMap['$'];
         }
 
         return null;
@@ -248,26 +248,21 @@ class Router {
             $this->dynamicMap[$method] = [];
         }
 
+        array_shift($parts);
         $this->buildMap($this->dynamicMap[$method], $parts, $controller, $middlewares);
-
-        echo json_encode($this->dynamicMap);
     }
 
     private function buildMap(array &$map, array $parts, string $controller, ?array $middlewares = null): void
     {
         if (count($parts) === 0) {
-            $map = [$controller, $middlewares];
+            $map['$'] = [$controller, $middlewares];
             return;
         }
 
         $part = array_shift($parts);
-        if ($part === "") {
-            $this->buildMap($map, $parts, $controller, $middlewares);
-            return;
-        }
+        $part = str_contains($part, ':') ? '%' : $part;
 
         if (!array_key_exists($part, $map)) {
-            $part = str_contains($part, ':') ? '%' : $part;
             $map[$part] = [];
         }
 
