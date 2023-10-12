@@ -10,6 +10,7 @@ use App\Controllers\ApiHealthController;
 use App\Controllers\CreateUserInBackgroundController;
 use App\Controllers\NameController;
 use App\Controllers\SaveController;
+use App\Events\AppEventListener;
 use App\Middlewares\CheckIPMiddleware;
 use App\Middlewares\LogRequestMiddleware;
 use App\Middlewares\NameMiddleware;
@@ -32,7 +33,8 @@ $app->bind(GenerateNameService::class, function () {
     return new GenerateNameService();
 });
 
-$database = new Database();
+$appEventListener = new AppEventListener();
+$database = new Database($appEventListener->getDispatcher());
 
 $app->singleton('db', function () use ($database) {
     return $database;

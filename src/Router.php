@@ -15,6 +15,7 @@ class Router {
         'DELETE' => [],
         'PATCH' => []
     ];
+    protected array $dynamicMap = [];
 
     protected ?array $preGlobalMiddlewares = null;
     protected ?array $postGlobalMiddlewares = null;
@@ -49,6 +50,11 @@ class Router {
 
     public function get(string $path, string $controller, ?array $middlewares = null): self
     {
+        if (str_contains($path, ':')) {
+            $this->buildTraversalMap('GET', $path, $controller, $middlewares);
+            return $this;
+        }
+
         $this->map['GET'][$this->withRoot($path)] = [$controller, $middlewares];
 
         return $this;
@@ -56,6 +62,11 @@ class Router {
 
     public function post(string $path, string $controller, ?array $middlewares = null): self
     {
+        if (str_contains($path, ':')) {
+            $this->buildTraversalMap('POST', $path, $controller, $middlewares);
+            return $this;
+        }
+
         $this->map['POST'][$this->withRoot($path)] = [$controller, $middlewares];
 
         return $this;
@@ -63,6 +74,11 @@ class Router {
     
     public function put(string $path, string $controller, ?array $middlewares = null): self
     {
+        if (str_contains($path, ':')) {
+            $this->buildTraversalMap('PUT', $path, $controller, $middlewares);
+            return $this;
+        }
+
         $this->map['PUT'][$this->withRoot($path)] = [$controller, $middlewares];
 
         return $this;
@@ -70,6 +86,11 @@ class Router {
 
     public function patch(string $path, string $controller, ?array $middlewares = null): self
     {
+        if (str_contains($path, ':')) {
+            $this->buildTraversalMap('PATCH', $path, $controller, $middlewares);
+            return $this;
+        }
+
         $this->map['PATCH'][$this->withRoot($path)] = [$controller, $middlewares];
 
         return $this;
@@ -77,6 +98,11 @@ class Router {
 
     public function delete(string $path, string $controller, ?array $middlewares = null): self
     {
+        if (str_contains($path, ':')) {
+            $this->buildTraversalMap('DELETE', $path, $controller, $middlewares);
+            return $this;
+        }
+
         $this->map['DELETE'][$this->withRoot($path)] = [$controller, $middlewares];
 
         return $this;
@@ -145,7 +171,10 @@ class Router {
         $args = $this->map[$method][$uri];
 
         if (!$args) {
-            throw new IvoryRouteNotFoundException('Route not found.');
+            $args = $this->tryDynamicRoute($method, $uri);
+            if (!$args) {
+                throw new IvoryRouteNotFoundException('Route not found.');
+            }
         }
         
         if ($middlewares = $args[1]) {
@@ -177,5 +206,71 @@ class Router {
         }
 
         return $result;
+    }
+
+    private function tryDynamicRoute(string $method, string $uri): ?array
+    {
+        $parts = explode('/', $uri);
+        array_shift($parts);
+        $levels = count($parts);
+
+        $dynamicMap = $this->dynamicMap[$method];
+
+        $index = 0;
+        while($index < $levels) {
+            $part = $parts[$index];
+            
+            if (!$dynamicMap[$part]) {
+                $part = '%';
+
+                if (!$dynamicMap[$part]) {
+                    return null;
+                }
+                $dynamicMap = $dynamicMap[$part];
+            } else {
+                $dynamicMap = $dynamicMap[$part];
+            }
+
+            $index++;
+        }
+
+        if ($dynamicMap) {
+            return $dynamicMap;
+        }
+
+        return null;
+    }
+
+    private function buildTraversalMap(string $method, string $path, string $controller, ?array $middlewares = null): void
+    {
+        $parts = explode('/', $path);
+        if (!array_key_exists($method, $this->dynamicMap)) {
+            $this->dynamicMap[$method] = [];
+        }
+
+        $this->buildMap($this->dynamicMap[$method], $parts, $controller, $middlewares);
+
+        echo json_encode($this->dynamicMap);
+    }
+
+    private function buildMap(array &$map, array $parts, string $controller, ?array $middlewares = null): void
+    {
+        if (count($parts) === 0) {
+            $map = [$controller, $middlewares];
+            return;
+        }
+
+        $part = array_shift($parts);
+        if ($part === "") {
+            $this->buildMap($map, $parts, $controller, $middlewares);
+            return;
+        }
+
+        if (!array_key_exists($part, $map)) {
+            $part = str_contains($part, ':') ? '%' : $part;
+            $map[$part] = [];
+        }
+
+        $this->buildMap($map[$part], $parts, $controller, $middlewares);
     }
 }

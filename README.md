@@ -18,7 +18,10 @@ $app->start();
 ## Routing:
 ```php
 $app->get('/', HomeController::class);
+```
 
+### Group routes
+```php
 $app->group('/api', function (Router $router) {
   $router->get('/name', GetController::class);
   $router->post('/name', SaveController::class);
@@ -27,11 +30,29 @@ $app->group('/api', function (Router $router) {
 });
 ```
 
+### Dynamic routes
+```php
+$app->get('/api/weather/city/:city', GetWeatherController::class);
+```
+
 ## Use case driven controllers:
 ```php
 class HomeController {
   public function execute(Request $request): string {
     return 'This is my response';
+  }
+}
+```
+
+### Customize the response
+```php
+class GetUserController {
+  public function execute(Request $request, Response $response): array {
+    $response->header("Content-Type", "application/json");
+
+    return [
+      'user' => User::first()
+    ];
   }
 }
 ```
@@ -49,7 +70,7 @@ $app->bind(HomeController::class, function (Container $c) {
 });
 ```
 
-## Dependencies will be injected to the constructor:
+### Dependencies will be injected to the constructor:
 ```php
 class HomeController {
   public function __construct(protected Service $service) {

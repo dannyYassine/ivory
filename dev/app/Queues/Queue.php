@@ -3,7 +3,6 @@
 namespace App\Queues;
 
 use Illuminate\Queue\Capsule\Manager;
-use Illuminate\Queue\QueueManager;
 
 class Queue {
     public Manager $queue;

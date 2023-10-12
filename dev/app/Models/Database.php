@@ -8,7 +8,7 @@ use Illuminate\Events\Dispatcher;
 class Database {
     public Capsule $capsule;
 
-    public function __construct() 
+    public function __construct(Dispatcher $eventsDispatcher) 
     {
         $capsule = new Capsule;
         $capsule->addConnection([
@@ -22,7 +22,7 @@ class Database {
              'prefix' => '',
         ]);
         $capsule->setAsGlobal();
-        $capsule->setEventDispatcher(new Dispatcher());
+        $capsule->setEventDispatcher($eventsDispatcher);
         $capsule->bootEloquent();
         $capsule->getContainer()->singleton('db', function () use ($capsule) {
             return $capsule;
